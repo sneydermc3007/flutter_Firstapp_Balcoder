@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({ Key? key }) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
   int _counter = 0;
 
-  contar() {
+  increseCounter() {
     setState(() {
-        _counter = _counter + 1;
+      _counter++;
     });
   }
 
@@ -21,20 +20,20 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Text( "Home Page Balcoder",
-          style: TextStyle (color: Colors.white, fontSize: 16), )) ,),
+        title: Center(child: Text("Home Page Balcoder")),
+      ),
       body: Container(
-        child: Text("El contador fue ppresionado: " + _counter.toString(), 
-        style: TextStyle(color: Colors.black, fontSize: 24)),
-        color: Colors.green, ),
-
+        child: Center(
+            child: Text("El contador fue presionado: " + _counter.toString())),
+        color: Colors.blue.shade50,
+      ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add) ,
-        onPressed: (){
-        print("Pressed");
-        contar();
-      },),
+        child: Icon(Icons.add_box),
+        onPressed: () {
+          print("Pressed");
+          increseCounter();
+        },
+      ),
     );
   }
 }
