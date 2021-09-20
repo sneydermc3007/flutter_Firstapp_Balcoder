@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_first_app_balcoder/utils/custom_container.dart';
+import 'package:flutter_first_app_balcoder/utils/custom_textform.dart';
 
 class UserFormPage extends StatefulWidget {
   const UserFormPage({Key? key}) : super(key: key);
@@ -9,6 +11,19 @@ class UserFormPage extends StatefulWidget {
 }
 
 class _UserFormPageState extends State<UserFormPage> {
+  late TextEditingController controllerName;
+  late TextEditingController controllerEmail;
+
+    bool isLoading = false;
+
+    @override
+  void initState() {
+    super.initState();
+
+    controllerName = new TextEditingController(text: "");
+    controllerEmail = new TextEditingController(text: "");
+  }
+
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height * 0.05;
@@ -17,36 +32,50 @@ class _UserFormPageState extends State<UserFormPage> {
 return Scaffold(
       body: Container(
         child: Center(
-            child: Column(
+            child: !isLoading ? Column(
           children: [
             Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: TextFormField(
-                decoration: InputDecoration(hintText: "User Name"),
+            Container(
+              child: CustomTextForm(
+                name: "nombre usuario", NameVariable: controllerName,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 24, right: 24, bottom: 36),
-              child: TextFormField(
-                decoration: InputDecoration(hintText: "User Mail"),
+            Container(
+              child: CustomTextForm(
+                name: "correo", NameVariable: controllerEmail,
               ),
             ),
             GestureDetector(
               onTap: () {
-                print("User Name");
-                print("User Email");
+                setState(() {
+                  isLoading = true;
+                });
+                print("User Name + " + controllerName.text);
+                print("User Email" + controllerEmail.text);
+
+                FirebaseFirestore.instance.collection("userCollection").add({
+                              "userName": controllerName.text,
+                              "userEmail": controllerEmail.text
+                            },
+                            ).then((value) { print("user Added");
+
+                controllerName.text = "";
+                controllerEmail.text = "";
+                setState(() {
+                isLoading = false;
+                          });
+                });
               },
               child: CustomContainer(
                 titleText: "Add User",
-                sizeHeight: _height,
-                sizeWidth: _width,
+                sizeHeight: _height * 1,
+                sizeWidth: _width * 0.65,
                 color: Colors.green,
               ),
             ),
             Spacer(),
           ],
-        )),
+        ): CircularProgressIndicator()),
       ),
     );
   }
